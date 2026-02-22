@@ -57,6 +57,7 @@
 
     <div id="main-header"></div>
 
+
     <main class="container">
         <header style="text-align: center; margin-top: 40px;">
             <h1 style="color: var(--sel-primary);">Season 07 Auction Tracker</h1>
@@ -116,23 +117,50 @@
         const playersCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQk0BZJ-JAtl6uuA5tiM2UPRKJXJV7v2KVKi5w2bb6W60-X04HzqLC7ggDS12qkfV77sKqyuhU_rnYE/pub?gid=1335626413&single=true&output=csv";
         const teamsCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQk0BZJ-JAtl6uuA5tiM2UPRKJXJV7v2KVKi5w2bb6W60-X04HzqLC7ggDS12qkfV77sKqyuhU_rnYE/pub?gid=1901632266&single=true&output=csv";
 
+        // Track state for each table independently
+        const tableState = {
+            playerTable: { lastHash: "", pendingHash: "" },
+            teamTable: { lastHash: "", pendingHash: "" }
+        };
+
         async function fetchData(url, tableId, isPlayerTable) {
             try {
-                const response = await fetch(url);
+                const cacheBuster = `&t=${new Date().getTime()}`;
+                const response = await fetch(url + cacheBuster);
                 const csvText = await response.text();
+
+                // 1. Create a quick "fingerprint" (hash) of the data
+                const incomingHash = csvText.length + csvText.slice(-30);
+                const state = tableState[tableId];
+
+                // 2. If the data matches what is already on the screen, stop here.
+                if (incomingHash === state.lastHash) return;
+
+                // 3. STABILITY CHECK (Flicker Guard)
+                // If this is the FIRST time we see this new data, mark it as pending and wait for next refresh.
+                if (incomingHash !== state.pendingHash) {
+                    state.pendingHash = incomingHash;
+                    console.log(`[${tableId}] New data detected, verifying stability...`);
+                    return;
+                }
+
+                // 4. Data is stable (seen twice). Update the UI and save the hash.
+                state.lastHash = incomingHash;
+                state.pendingHash = ""; // Reset pending
+
                 const rows = csvText.split(/\r?\n/).filter(row => row.trim() !== "");
                 const tbody = document.querySelector(`#${tableId} tbody`);
                 tbody.innerHTML = "";
 
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i].split(',');
+                    if (cols.length < 2) continue;
+
                     const tr = document.createElement('tr');
                     let html = "";
 
-                    // Add logo column for Team Standings table
                     if (!isPlayerTable) {
                         const teamName = cols[0].trim();
-                        // Format: "Wretchedly Terrible FC" -> "wretchedly-terrible-fc"
                         const logoFileName = teamName.toLowerCase().replace(/\s+/g, '-');
                         html += `<td><img src="assets/images/logos/${logoFileName}.png" class="team-logo-mini" alt=""></td>`;
                     }
@@ -160,8 +188,11 @@
             fetchData(teamsCsvUrl, 'teamTable', false);
         }
 
-        // Auto-refresh every 15 seconds
-        setInterval(refresh, 15000);
+        // Refresh every 5 seconds.
+        // Combined with the Guard, updates will appear in 10s if stable.
+        setInterval(refresh, 5000);
+
+        // Initial load
         refresh();
     </script>
 </body>

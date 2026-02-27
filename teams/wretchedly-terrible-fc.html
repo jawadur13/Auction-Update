@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astral Warriors | Sagedian eFootball</title>
+    <title>Wretchedly Terrible FC | Sagedian eFootball</title>
     <link rel="stylesheet" href="../assets/css/main.css">
     <style>
         .team-header {
@@ -35,36 +35,62 @@
             border-radius: 4px;
         }
 
-        .squad-section {
-            margin-top: 40px;
+        /* Player Card Grid System */
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .player-table {
-            width: 100%;
-            border-collapse: collapse;
+        .player-card {
             background: var(--surface-card);
-            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
 
-            .player-table th {
-                background: rgba(255,255,255,0.05);
-                padding: 15px;
-                text-align: left;
-                color: var(--text-muted);
-                font-size: 0.8rem;
+            .player-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--sel-primary);
             }
 
-            .player-table td {
-                padding: 15px;
-                border-bottom: 1px solid var(--border-color);
+            .player-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: var(--sel-primary);
+                opacity: 0.6;
             }
 
-        .status-pill {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            background: var(--border-color);
+        .player-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: var(--text-main);
+        }
+
+        .player-pos {
+            font-size: 0.8rem;
+            color: var(--scl-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .position-group-title {
+            margin: 40px 0 20px 0;
+            font-size: 1.2rem;
+            border-left: 4px solid var(--scl-gold);
+            padding-left: 15px;
             color: var(--text-main);
         }
     </style>
@@ -91,29 +117,50 @@
         </div>
 
         <section class="squad-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2>Current Squad</h2>
+            <h2>Current Squad</h2>
+
+            <h3 class="position-group-title">Goalkeepers</h3>
+            <div class="player-grid">
+                <div class="player-card"><span class="player-name">Peter Schmeichel</span><span class="player-pos">GK</span></div>
+                <div class="player-card"><span class="player-name">Júlio César</span><span class="player-pos">GK</span></div>
+                <div class="player-card"><span class="player-name">Gregor Kobel</span><span class="player-pos">GK</span></div>
             </div>
 
-            <div class="card" style="padding: 0;">
-                <table class="player-table">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Player Name</th>
-                            <th>Position</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>-</td>
-                            <td style="color: var(--text-muted); font-style: italic;">Squad details coming soon...</td>
-                            <td>-</td>
-                            <td><span class="status-pill">Pending</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h3 class="position-group-title">Defenders</h3>
+            <div class="player-grid">
+                <div class="player-card"><span class="player-name">Tony Adams</span><span class="player-pos">CB</span></div>
+                <div class="player-card"><span class="player-name">Alessandro Bastoni</span><span class="player-pos">CB</span></div>
+                <div class="player-card"><span class="player-name">Nico Schlotterbeck</span><span class="player-pos">CB</span></div>
+                <div class="player-card"><span class="player-name">Riccardo Ferri</span><span class="player-pos">CB</span></div>
+                <div class="player-card"><span class="player-name">Pau Torres</span><span class="player-pos">CB</span></div>
+                <div class="player-card"><span class="player-name">Reece James</span><span class="player-pos">RB</span></div>
+                <div class="player-card"><span class="player-name">Alphonso Davies</span><span class="player-pos">LB</span></div>
+                <div class="player-card"><span class="player-name">Hector Fort</span><span class="player-pos">RB</span></div>
+            </div>
+
+            <h3 class="position-group-title">Midfielders</h3>
+            <div class="player-grid">
+                <div class="player-card"><span class="player-name">Sergio Busquets</span><span class="player-pos">DMF</span></div>
+                <div class="player-card"><span class="player-name">Andrea Pirlo</span><span class="player-pos">CMF</span></div>
+                <div class="player-card"><span class="player-name">Aurélien Tchouaméni</span><span class="player-pos">DMF</span></div>
+                <div class="player-card"><span class="player-name">Jordan Henderson</span><span class="player-pos">CMF</span></div>
+                <div class="player-card"><span class="player-name">Edgar Davids</span><span class="player-pos">CMF</span></div>
+                <div class="player-card"><span class="player-name">Koji Nakata</span><span class="player-pos">DMF</span></div>
+                <div class="player-card"><span class="player-name">Raúl González</span><span class="player-pos">AMF/SS</span></div>
+                <div class="player-card"><span class="player-name">Gianfranco Zola</span><span class="player-pos">AMF/SS</span></div>
+                <div class="player-card"><span class="player-name">Uli Hoenes</span><span class="player-pos">AMF</span></div>
+                <div class="player-card"><span class="player-name">Benja Cremaschi</span><span class="player-pos">CMF</span></div>
+            </div>
+
+            <h3 class="position-group-title">Forwards</h3>
+            <div class="player-grid">
+                <div class="player-card"><span class="player-name">Luis Suárez</span><span class="player-pos">CF</span></div>
+                <div class="player-card"><span class="player-name">Michael Owen</span><span class="player-pos">CF</span></div>
+                <div class="player-card"><span class="player-name">Pierre-Emerick Aubameyang</span><span class="player-pos">CF</span></div>
+                <div class="player-card"><span class="player-name">Bebeto</span><span class="player-pos">CF</span></div>
+                <div class="player-card"><span class="player-name">George Best</span><span class="player-pos">RWF</span></div>
+                <div class="player-card"><span class="player-name">Desiré Doué</span><span class="player-pos">LWF</span></div>
+                <div class="player-card"><span class="player-name">Lamine Yamal</span><span class="player-pos">RWF</span></div>
             </div>
         </section>
 
